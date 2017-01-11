@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/et_title"
+        android:padding="5dp"
+        android:hint="输入标题"
+        android:textSize="20sp"
+        android:lines="1"
+        android:maxLength="15"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dadadf"/>
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <EditText
+            android:id="@+id/et_content"
+            android:gravity="left|top"
+            android:padding="5dp"
+            android:hint="输入内容"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:background="@null"
+            android:maxLines="13"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_update"
+            android:layout_marginTop="15dp"
+            android:textSize="10sp"
+            android:layout_marginRight="16dp"
+            android:gravity="right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:background="@drawable/button_border"
+        android:text="保存"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
