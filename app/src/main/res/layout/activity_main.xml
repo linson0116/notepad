@@ -1,45 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.linson.notepad.MainActivity">
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-        <!--<Button-->
-            <!--android:id="@+id/btn_delete"-->
-            <!--android:visibility="gone"-->
-            <!--android:text="删除"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-        <!--<TextView-->
-            <!--android:text="记事本"-->
-            <!--android:textSize="20sp"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="wrap_content" />-->
 
-    <!--</LinearLayout>-->
-    <android.support.v7.widget.RecyclerView
-        android:background="#d6d2d2"
-        android:id="@+id/recyclerview"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    <Button
-        android:id="@+id/btn_add"
-        android:text="+"
-        android:textSize="25sp"
-        android:textColor="#fff"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/circle"
-        android:layout_width="52dp"
-        android:layout_height="52dp" />
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:theme="@style/ToolBarStyle"
+                app:titleTextAppearance="@style/ToolbarTitle" />
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/layout_main" />
+    </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

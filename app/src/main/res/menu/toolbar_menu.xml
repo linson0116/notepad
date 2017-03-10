@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_up_file"
+        android:title="上传"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_down_file"
+        android:title="下载"
+        app:showAsAction="always" />
+    <!--<item android:id="@+id/menu_test" android:title="测试" app:showAsAction="always" />-->
+</menu>

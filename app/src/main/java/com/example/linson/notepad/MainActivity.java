@@ -4,20 +4,22 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ViewUtils;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.linson.notepad.domain.ContentBean;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -25,22 +27,46 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "log";
     @ViewInject(R.id.btn_add)
-    Button btn_add;
+    FloatingActionButton btn_add;
+    //    @ViewInject(R.id.btn_test)
+//    Button btn_test;
 //    @ViewInject(R.id.btn_delete)
 //    Button btn_delete;
     @ViewInject(R.id.recyclerview)
     RecyclerView recyclerView;
     private List<ContentBean> mListData = new ArrayList<>();
     private MyAdapter myAdapter;
-    private static final String TAG = "log";
+    private android.os.Handler mHandler = new android.os.Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 100:
+                    DataSupport.deleteAll(ContentBean.class);
+                    List<ContentBean> list = (List<ContentBean>) msg.obj;
+                    for (ContentBean bean : list) {
+                        bean.save();
+                    }
+                    Log.i(TAG, "handleMessage: " + list);
+                    mListData = DataSupport.order("update desc").find(ContentBean.class);
+                    myAdapter.notifyDataSetChanged();
+                    Toast.makeText(MainActivity.this, "下载备份数据成功，并刷新数据库", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -49,7 +75,13 @@ public class MainActivity extends AppCompatActivity {
         initUI();
     }
 
+    private void test() {
+
+    }
+
     private void initUI() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         myAdapter = new MyAdapter(mListData);
         recyclerView.setAdapter(myAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -59,16 +91,59 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), NewContentActivity.class);
-                startActivityForResult(intent,100);
+                startActivityForResult(intent, 100);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_up_file:
+                Log.i(TAG, "onOptionsItemSelected: 点击了上传按钮");
+                backupToXml();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NetUtils.upFile(MainActivity.this, ConstantUtils.FILE_NAME, ConstantUtils.DIR_NAME);
+                    }
+                }).start();
+                break;
+            case R.id.menu_down_file:
+                Log.i(TAG, "onOptionsItemSelected: 点击了下载按钮");
+                String down_file_path = getFilesDir().getAbsolutePath() + File.separator + ConstantUtils.DOWN_FILE_NAME;
+                NetUtils.downFile(mHandler, ConstantUtils.SERVER_DOWN_FILE_URL, down_file_path, ConstantUtils.FILE_NAME, ConstantUtils.DIR_NAME);
+                break;
+//            case R.id.menu_test:
+//                Log.i(TAG, "onOptionsItemSelected: 点击了测试按钮");
+//                test();
+//                break;
+        }
+        return true;
+    }
+
+    private void backupToXml() {
+        List<ContentBean> list = DataSupport.findAll(ContentBean.class);
+        File filesDir = getFilesDir();
+        try {
+            FileOutputStream fos = new FileOutputStream(new File(filesDir, ConstantUtils.FILE_NAME));
+            XmlUtils.saveToXml(list, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == 101) {
-            mListData.add(0,DataSupport.findLast(ContentBean.class));
+            mListData.add(0, DataSupport.findLast(ContentBean.class));
             myAdapter.notifyDataSetChanged();
         } else if (requestCode == 100 && resultCode == 102) {
             //更新后的bean
@@ -112,9 +187,9 @@ public class MainActivity extends AppCompatActivity {
                     ContentBean bean = mListData.get(viewHolder.getAdapterPosition());
                     Intent intent = new Intent(getApplicationContext(), NewContentActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("bean",bean);
+                    bundle.putSerializable("bean", bean);
                     intent.putExtras(bundle);
-                    startActivityForResult(intent,100);
+                    startActivityForResult(intent, 100);
                 }
             });
             view.setOnLongClickListener(new View.OnLongClickListener() {
@@ -158,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
                 holder.tv_title.setVisibility(View.GONE);
                 holder.tv_content.setMaxLines(4);
             }
-
         }
 
         @Override
@@ -169,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
         class ViewHolder extends RecyclerView.ViewHolder {
             TextView tv_content;
             TextView tv_title;
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 tv_content = (TextView) itemView.findViewById(R.id.tv_content);

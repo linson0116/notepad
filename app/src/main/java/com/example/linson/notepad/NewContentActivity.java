@@ -2,9 +2,8 @@ package com.example.linson.notepad;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,9 +20,9 @@ import org.litepal.crud.DataSupport;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 public class NewContentActivity extends AppCompatActivity {
+    private static final String TAG = "log";
     @ViewInject(R.id.et_title)
     EditText et_title;
     @ViewInject(R.id.et_content)
@@ -34,8 +33,6 @@ public class NewContentActivity extends AppCompatActivity {
     TextView tv_update;
     @ViewInject(R.id.ll_content)
     LinearLayout ll_content;
-
-    private static final String TAG = "log";
     private boolean isNew = true;
     private ContentBean mBean;
 
@@ -51,7 +48,7 @@ public class NewContentActivity extends AppCompatActivity {
                 isNew = false;
                 et_title.setText(mBean.getTitle());
                 et_content.setText(mBean.getContent());
-                String strUpdate = "上次修改：" + new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss").format(mBean.getUpdate());
+                String strUpdate = "上次修改：" + mBean.getUpdate();
                 tv_update.setText(strUpdate);
             } else {
                 isNew = true;
@@ -95,7 +92,7 @@ public class NewContentActivity extends AppCompatActivity {
         ContentBean bean = DataSupport.find(ContentBean.class, mBean.getId());
         bean.setTitle(et_title.getText().toString());
         bean.setContent(et_content.getText().toString());
-        bean.setUpdate(new Date());
+        bean.setUpdate(new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date()));
         boolean saved = bean.isSaved();
         Log.i(TAG, "save: " + saved);
         bean.save();
@@ -108,7 +105,7 @@ public class NewContentActivity extends AppCompatActivity {
         ContentBean bean = new ContentBean();
         bean.setTitle(et_title.getText().toString());
         bean.setContent(et_content.getText().toString());
-        bean.setUpdate(new Date());
+        bean.setUpdate(new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date()));
         bean.save();
     }
 }
