@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -35,6 +36,8 @@ public class NewContentActivity extends AppCompatActivity {
     LinearLayout ll_content;
     private boolean isNew = true;
     private ContentBean mBean;
+    private KeyListener mKeyListener_content;
+    private KeyListener mKeyListener_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,10 @@ public class NewContentActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+        mKeyListener_content = et_content.getKeyListener();
+        mKeyListener_title = et_title.getKeyListener();
+        et_content.setKeyListener(null);
+        et_title.setKeyListener(null);
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,13 +83,35 @@ public class NewContentActivity extends AppCompatActivity {
                 finish();
             }
         });
-        ll_content.setOnClickListener(new View.OnClickListener() {
+//        ll_content.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                et_content.setSelection(et_content.length());
+//                et_content.requestFocus();
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(et_content, InputMethodManager.SHOW_FORCED);
+//            }
+//        });
+        et_content.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
-                et_content.setSelection(et_content.length());
-                et_content.requestFocus();
+            public boolean onLongClick(View v) {
+                et_content.setKeyListener(mKeyListener_content);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(et_content, InputMethodManager.SHOW_FORCED);
+                et_content.setSelection(et_content.length());
+                et_content.requestFocus();
+                return true;
+            }
+        });
+        et_title.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                et_title.setKeyListener(mKeyListener_title);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(et_title, InputMethodManager.SHOW_FORCED);
+                et_title.setSelection(et_title.length());
+                et_title.requestFocus();
+                return true;
             }
         });
     }
