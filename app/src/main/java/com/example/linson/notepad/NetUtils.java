@@ -52,6 +52,21 @@ public class NetUtils {
         });
     }
 
+    public static void upFile(final Context context, String fileName, String dirName, RequestCallBack callBack) {
+        HttpUtils httpUtils = new HttpUtils();
+        String filePath = context.getFilesDir() + File.separator + fileName;
+        File file = new File(filePath);
+        if (file.exists()) {
+            Log.i(TAG, "upFile: 文件存在 " + file.getAbsolutePath());
+        }
+        String url = ConstantUtils.SERVER_UP_FILE_URL;
+        RequestParams requestParams = new RequestParams();
+        requestParams.addQueryStringParameter("fileName", fileName);
+        requestParams.addQueryStringParameter("dirName", dirName);
+        requestParams.setBodyEntity(new FileUploadEntity(new File(filePath), "binary/octet-stream"));
+        httpUtils.send(HttpRequest.HttpMethod.POST, url, requestParams, callBack);
+    }
+
     public static void downFile(final Handler mHandler, String down_file_url, String down_file_path, String fileName, String dirName) {
         HttpUtils httpUtils = new HttpUtils();
         Log.i(TAG, "downFile: " + down_file_url);
@@ -75,6 +90,9 @@ public class NetUtils {
             @Override
             public void onFailure(HttpException e, String s) {
                 Log.i(TAG, "onFailure: 下载失败");
+                Message message = mHandler.obtainMessage();
+                message.what = 101;
+                mHandler.sendMessage(message);
             }
         });
     }

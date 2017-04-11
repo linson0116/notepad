@@ -11,18 +11,7 @@
         android:layout_height="match_parent"
         android:background="#d6d2d2" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btn_add"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="36dp"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/plus"
-        app:backgroundTint="#ffab2e"
-        app:elevation="8dp"
-        app:rippleColor="#33728dff" />
+
     <!--<Button-->
     <!--android:id="@+id/btn_test"-->
     <!--android:text="btn"-->

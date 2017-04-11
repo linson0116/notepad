@@ -8,13 +8,12 @@
     tools:context="com.example.linson.notepad.MainActivity">
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -24,7 +23,18 @@
                 app:theme="@style/ToolBarStyle"
                 app:titleTextAppearance="@style/ToolbarTitle" />
         </android.support.design.widget.AppBarLayout>
-
         <include layout="@layout/layout_main" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/btn_add"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/plus"
+            app:backgroundTint="#ffab2e"
+            app:elevation="8dp"
+            app:rippleColor="#33728dff" />
     </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>

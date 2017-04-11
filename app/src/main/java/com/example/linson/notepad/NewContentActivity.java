@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NewContentActivity extends AppCompatActivity {
+    public final static String DATE_STYLE = "yyyy年MM月dd日 HH时mm分ss秒";
     private static final String TAG = "log";
     @ViewInject(R.id.et_title)
     EditText et_title;
@@ -58,9 +59,7 @@ public class NewContentActivity extends AppCompatActivity {
             }
         }
         initUI();
-
     }
-
     private void initUI() {
         mKeyListener_content = et_content.getKeyListener();
         mKeyListener_title = et_title.getKeyListener();
@@ -83,15 +82,6 @@ public class NewContentActivity extends AppCompatActivity {
                 finish();
             }
         });
-//        ll_content.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                et_content.setSelection(et_content.length());
-//                et_content.requestFocus();
-//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.showSoftInput(et_content, InputMethodManager.SHOW_FORCED);
-//            }
-//        });
         et_content.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -121,7 +111,7 @@ public class NewContentActivity extends AppCompatActivity {
         ContentBean bean = DataSupport.find(ContentBean.class, mBean.getId());
         bean.setTitle(et_title.getText().toString());
         bean.setContent(et_content.getText().toString());
-        bean.setUpdate(new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date()));
+        bean.setUpdate(new SimpleDateFormat(DATE_STYLE).format(new Date()));
         boolean saved = bean.isSaved();
         Log.i(TAG, "save: " + saved);
         bean.save();
@@ -134,7 +124,7 @@ public class NewContentActivity extends AppCompatActivity {
         ContentBean bean = new ContentBean();
         bean.setTitle(et_title.getText().toString());
         bean.setContent(et_content.getText().toString());
-        bean.setUpdate(new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date()));
+        bean.setUpdate(new SimpleDateFormat(DATE_STYLE).format(new Date()));
         bean.save();
     }
 }
